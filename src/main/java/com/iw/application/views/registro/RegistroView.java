@@ -27,13 +27,13 @@ import com.vaadin.flow.router.Route;
 @Uses(Icon.class)
 public class RegistroView extends Div {
 
-    private TextField firstName = new TextField("First name");
+    private static final long serialVersionUID = 1L;
+	private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
     private EmailField email = new EmailField("Email address");
     private DatePicker dateOfBirth = new DatePicker("Birthday");
     private PhoneNumberField phone = new PhoneNumberField("Phone number");
-    private TextField occupation = new TextField("Occupation");
-
+    
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
@@ -68,7 +68,7 @@ public class RegistroView extends Div {
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
         email.setErrorMessage("Please enter a valid email address");
-        formLayout.add(firstName, lastName, dateOfBirth, phone, email, occupation);
+        formLayout.add(firstName, lastName, dateOfBirth, phone, email);
         return formLayout;
     }
 

@@ -5,6 +5,7 @@ import com.iw.application.components.appnav.AppNav;
 import com.iw.application.components.appnav.AppNavItem;
 import com.iw.application.views.about.AboutView;
 import com.iw.application.views.helloworld.HelloWorldView;
+import com.iw.application.views.login.LoginView;
 import com.iw.application.views.registro.RegistroView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -57,6 +58,7 @@ public class MainLayout extends AppLayout {
         nav.addItem(new AppNavItem("Hello World", HelloWorldView.class, "la la-globe"));
         nav.addItem(new AppNavItem("Registro", RegistroView.class, "la la-user"));
         nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
+        nav.addItem(new AppNavItem("Login", LoginView.class, "la la-user"));
 
         return nav;
     }
