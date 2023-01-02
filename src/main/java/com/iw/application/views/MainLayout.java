@@ -3,12 +3,14 @@ package com.iw.application.views;
 
 import com.iw.application.components.appnav.AppNav;
 import com.iw.application.components.appnav.AppNavItem;
+import com.iw.application.security.SecurityService;
 import com.iw.application.views.about.AboutView;
 import com.iw.application.views.helloworld.HelloWorldView;
 import com.iw.application.views.login.LoginView;
-import com.iw.application.views.registro.RegistroView;
+import com.iw.application.views.register.RegisterView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -16,6 +18,7 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -23,8 +26,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
+    private SecurityService securityService;
 
-    public MainLayout() {
+    public MainLayout(@Autowired SecurityService securityService) {
+        this.securityService = securityService;
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
@@ -37,7 +42,11 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        addToNavbar(true, toggle, viewTitle);
+        Button logout = new Button("Logout", e -> {
+            securityService.logout();
+        });
+
+        addToNavbar(true, toggle, viewTitle, logout);
     }
 
     private void addDrawerContent() {
@@ -56,7 +65,7 @@ public class MainLayout extends AppLayout {
         AppNav nav = new AppNav();
 
         nav.addItem(new AppNavItem("Hello World", HelloWorldView.class, "la la-globe"));
-        nav.addItem(new AppNavItem("Registro", RegistroView.class, "la la-user"));
+        nav.addItem(new AppNavItem("Registro", RegisterView.class, "la la-user"));
         nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
         nav.addItem(new AppNavItem("Login", LoginView.class, "la la-user"));
 

@@ -1,7 +1,7 @@
-package com.iw.application.views.registro;
+package com.iw.application.views.register;
 
 import com.iw.application.data.entity.SamplePerson;
-import com.iw.application.data.service.SamplePersonService;
+import com.iw.application.data.repositories.SamplePersonService;
 import com.iw.application.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -21,10 +21,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("Registro")
 @Route(value = "register-form", layout = MainLayout.class)
 @Uses(Icon.class)
+@AnonymousAllowed
 public class RegistroView extends Div {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +35,7 @@ public class RegistroView extends Div {
     private EmailField email = new EmailField("Email address");
     private DatePicker dateOfBirth = new DatePicker("Birthday");
     private PhoneNumberField phone = new PhoneNumberField("Phone number");
-    
+
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 

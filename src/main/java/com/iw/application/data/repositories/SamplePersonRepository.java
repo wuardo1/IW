@@ -1,8 +1,9 @@
-package com.iw.application.data.service;
+package com.iw.application.data.repositories;
 
 import com.iw.application.data.entity.SamplePerson;
-import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
 
 public interface SamplePersonRepository extends JpaRepository<SamplePerson, UUID> {
 
