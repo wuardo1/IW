@@ -1,5 +1,6 @@
 package com.iw.application.views.helloworld;
 
+import com.iw.application.data.service.account.UserService;
 import com.iw.application.views.MainLayout;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.PermitAll;
 
@@ -20,6 +22,8 @@ public class HelloWorldView extends HorizontalLayout {
 
     private TextField name;
     private Button sayHello;
+    @Autowired
+    UserService userService;
 
     public HelloWorldView() {
         name = new TextField("Your name");

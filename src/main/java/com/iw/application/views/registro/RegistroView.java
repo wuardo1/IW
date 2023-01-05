@@ -1,7 +1,5 @@
 package com.iw.application.views.registro;
 
-import com.iw.application.data.entity.SamplePerson;
-import com.iw.application.data.service.SamplePersonService;
 import com.iw.application.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -37,29 +35,29 @@ public class RegistroView extends Div {
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private Binder<SamplePerson> binder = new Binder<>(SamplePerson.class);
+    //private Binder<SamplePerson> binder = new Binder<>(SamplePerson.class);
 
-    public RegistroView(SamplePersonService personService) {
-        addClassName("registro-view");
-
-        add(createTitle());
-        add(createFormLayout());
-        add(createButtonLayout());
-
-        binder.bindInstanceFields(this);
-        clearForm();
-
-        cancel.addClickListener(e -> clearForm());
-        save.addClickListener(e -> {
-            personService.update(binder.getBean());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
-            clearForm();
-        });
-    }
-
-    private void clearForm() {
-        binder.setBean(new SamplePerson());
-    }
+//    public RegistroView(SamplePersonService personService) {
+//        addClassName("registro-view");
+//
+//        add(createTitle());
+//        add(createFormLayout());
+//        add(createButtonLayout());
+//
+//        binder.bindInstanceFields(this);
+//        clearForm();
+//
+//        cancel.addClickListener(e -> clearForm());
+//        save.addClickListener(e -> {
+//            personService.update(binder.getBean());
+//            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+//            clearForm();
+//        });
+//    }
+//
+//    private void clearForm() {
+//        binder.setBean(new SamplePerson());
+//    }
 
     private Component createTitle() {
         return new H3("Personal information");

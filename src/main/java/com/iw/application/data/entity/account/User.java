@@ -1,18 +1,25 @@
 package com.iw.application.data.entity.account;
 
 
-import com.iw.application.data.entity.AbstractEntity;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user_table")
-public class User extends AbstractEntity {
+public class User {
+    @Id
+    @GeneratedValue
+    @Type(type = "uuid-char")
+    private UUID userId;
+
     @NotNull
     public String mail; // serves as username
 
@@ -25,7 +32,10 @@ public class User extends AbstractEntity {
     private String occupation;
     private boolean important;
 
-    @ElementCollection(targetClass=UserGroup.class, fetch=FetchType.EAGER) // redo
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<BankAccount> bankAccounts;
+
+    @ElementCollection(targetClass=UserGroup.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name="user_user_group")
     @Column(name="user_group") // Column name in user_user_group
@@ -37,7 +47,6 @@ public class User extends AbstractEntity {
         this.mail = mail;
         this.password = password;
         this.userGroups = userGroups;
-
     }
 
     public Collection<UserGroup> getUserGroups() {
@@ -110,5 +119,21 @@ public class User extends AbstractEntity {
 
     public void setImportant(boolean important) {
         this.important = important;
+    }
+
+    public void addBankAccount(BankAccount bankAccount) {
+        this.bankAccounts.add(bankAccount);
+    }
+
+    public void removeBankAccount(BankAccount bankAccount) {
+        this.bankAccounts.remove(bankAccount);
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }
