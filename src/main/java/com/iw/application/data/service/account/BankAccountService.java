@@ -17,14 +17,16 @@ public class BankAccountService {
         BankAccount sourceAccount = bankAccountRepository.findByAccountNumber(sourceAccountNumber)
                 .orElseThrow(() -> new EntityNotFoundException(BANK_ACCOUNT_NOT_FOUND_TEXT));
 
-        BankAccount destinationAccount = bankAccountRepository.findByAccountNumber(sourceAccountNumber)
+        BankAccount destinationAccount = bankAccountRepository.findByAccountNumber(destinationAccountNumber)
                 .orElseThrow(() -> new EntityNotFoundException(BANK_ACCOUNT_NOT_FOUND_TEXT));
 
-        if (sourceAccount.getAmountDeductible() > amount) {
+        if (sourceAccount.getAmountDeductible() < amount) {
             throw new Exception(ILLEGAL_TRANSACTION_AMOUNT_TEXT); // TODO change exception type
         } else {
             sourceAccount.reduceBalance(amount);
             destinationAccount.increaseBalance(amount);
+            bankAccountRepository.save(sourceAccount);
+            bankAccountRepository.save(destinationAccount);
         }
     }
 }

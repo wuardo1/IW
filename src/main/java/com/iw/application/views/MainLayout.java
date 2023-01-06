@@ -74,12 +74,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MainLayout extends AppLayout {
 
-    //@Autowired
-    //private SecurityService securityService;
+    @Autowired
+    private SecurityService securityService;
 
     private H2 viewTitle;
 
-    // private Button logoutButton = new Button("logout");
+    private Button logoutButton = new Button("logout");
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -94,11 +94,11 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-//        logoutButton.addClickListener(event -> {
-//            securityService.logout();
-//        });
+        logoutButton.addClickListener(event -> {
+            securityService.logout();
+        });
 
-        addToNavbar(true, toggle, viewTitle);
+        addToNavbar(true, toggle, viewTitle, logoutButton);
     }
 
     private void addDrawerContent() {
