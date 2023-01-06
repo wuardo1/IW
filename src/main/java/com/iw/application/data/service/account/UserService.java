@@ -9,13 +9,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class UserService {
+
+    private final static String USER_NOT_FOUND_TEXT = "The requested user was not found.";
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
@@ -25,11 +29,18 @@ public class UserService {
     }
 
     public void createBankAccount() {
-        CustomUserDetails details =
-                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUserId(details.getUser().getUserId()).get();
+        User user = getCurrentUser();
         BankAccount bankAccount = new BankAccount(user);
         bankAccountRepository.save(bankAccount);
         userRepository.save(user);
+    }
+
+
+
+    public User getCurrentUser() throws EntityNotFoundException {
+        CustomUserDetails details =
+                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUserId(details.getUser().getUserId())
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_TEXT));
     }
 }

@@ -136,4 +136,12 @@ public class User {
     public void setUserId(UUID userId) {
         this.userId = userId;
     }
+
+    public Set<BankAccount> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public void setBankAccounts(Set<BankAccount> bankAccounts) {
+        this.bankAccounts = bankAccounts;
+    }
 }

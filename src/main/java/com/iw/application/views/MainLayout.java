@@ -52,12 +52,14 @@ public class MainLayout extends AppLayout {
 
 import com.iw.application.components.appnav.AppNav;
 import com.iw.application.components.appnav.AppNavItem;
+import com.iw.application.security.SecurityService;
 import com.iw.application.views.about.AboutView;
 import com.iw.application.views.helloworld.HelloWorldView;
 import com.iw.application.views.login.LoginView;
 import com.iw.application.views.registro.RegisterView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -65,13 +67,19 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The main view is a top-level placeholder for other views.
  */
 public class MainLayout extends AppLayout {
 
+    //@Autowired
+    //private SecurityService securityService;
+
     private H2 viewTitle;
+
+    // private Button logoutButton = new Button("logout");
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -85,6 +93,10 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+
+//        logoutButton.addClickListener(event -> {
+//            securityService.logout();
+//        });
 
         addToNavbar(true, toggle, viewTitle);
     }

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 public class CreditCard {
-    @Id()
+    @Id
     @GeneratedValue
     @Type(type = "uuid-char")
     private int creditCardId;
