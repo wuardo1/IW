@@ -32,12 +32,12 @@ public class UserEntity {
     private String occupation;
     private boolean important;
 
-    @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<BankAccountEntity> bankAccountEntities;
 
     @ElementCollection(targetClass= UserGroupEntity.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name="user_user_group")
+    @CollectionTable(name="user_groups", joinColumns = @JoinColumn(name = "user_id")) // Table name
     @Column(name="user_group") // Column name in user_user_group
     public Collection<UserGroupEntity> userGroupEntities;
 

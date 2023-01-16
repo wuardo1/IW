@@ -14,7 +14,8 @@ public class BankAccountEntity {
     private UUID bankAccountId;
 
     @ManyToOne
-    private UserEntity userEntity;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
 //    @OneToOne(
 //            mappedBy = "bank_account",
@@ -30,11 +31,11 @@ public class BankAccountEntity {
     private int accountNumber;
 
     public BankAccountEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
+        this.user = userEntity;
     }
 
     public BankAccountEntity(UserEntity userEntity, int accountNumber) {
-        this.userEntity = userEntity;
+        this.user = userEntity;
         this.balance = 0;
         this.accountNumber = accountNumber;
     }
@@ -44,11 +45,11 @@ public class BankAccountEntity {
     }
 
     public UserEntity getUser() {
-        return userEntity;
+        return user;
     }
 
     public void setUser(UserEntity userEntity) {
-        this.userEntity = userEntity;
+        this.user = userEntity;
     }
 
 //    public CreditCard getCreditCard() {
