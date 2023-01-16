@@ -3,18 +3,18 @@ package com.iw.application.data.entity.account;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.Random;
 import java.util.UUID;
 
-@Entity(name = "bank_account")
-public class BankAccount {
+@Entity
+@Table(name = "bank_accounts")
+public class BankAccountEntity {
     @Id
     @GeneratedValue
     @Type(type = "uuid-char")
     private UUID bankAccountId;
 
     @ManyToOne
-    private User user;
+    private UserEntity userEntity;
 
 //    @OneToOne(
 //            mappedBy = "bank_account",
@@ -27,24 +27,28 @@ public class BankAccount {
     private float balance;
     private float creditLine;
 
-    @GeneratedValue
     private int accountNumber;
 
-    public BankAccount() {
+    public BankAccountEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    public BankAccountEntity(UserEntity userEntity, int accountNumber) {
+        this.userEntity = userEntity;
+        this.balance = 0;
+        this.accountNumber = accountNumber;
+    }
+
+    public BankAccountEntity() {
 
     }
 
-    public BankAccount(User user) {
-        this.user = user;
-        balance = 0;
+    public UserEntity getUser() {
+        return userEntity;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
 //    public CreditCard getCreditCard() {
@@ -89,5 +93,9 @@ public class BankAccount {
 
     public void increaseBalance(double amount) {
         balance += amount;
+    }
+
+    public UUID getUUID() {
+        return this.bankAccountId;
     }
 }

@@ -1,9 +1,8 @@
 package com.iw.application.data.service.account;
 
-import com.iw.application.data.entity.account.BankAccount;
-import com.iw.application.data.entity.account.User;
+import com.iw.application.data.entity.account.BankAccountEntity;
+import com.iw.application.data.entity.account.UserEntity;
 import com.iw.application.security.CustomUserDetails;
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,29 +14,34 @@ import javax.persistence.EntityNotFoundException;
 public class UserService {
 
     private final static String USER_NOT_FOUND_TEXT = "The requested user was not found.";
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final BankAccountService bankAccountService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private BankAccountRepository bankAccountRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       BankAccountService bankAccountService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.bankAccountService = bankAccountService;
+    }
 
-    public void addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public void addUser(UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userRepository.save(userEntity);
     }
 
     public void createBankAccount() {
-        User user = getCurrentUser();
-        BankAccount bankAccount = new BankAccount(user);
-        bankAccountRepository.save(bankAccount);
-        userRepository.save(user);
+        UserEntity userEntity = getCurrentUser();
+        BankAccountEntity bankAccountEntity = bankAccountService.createBankAccount(userEntity);
+        userEntity.addBankAccount(bankAccountEntity);
+        userRepository.flush();
     }
 
 
 
-    public User getCurrentUser() throws EntityNotFoundException {
+    public UserEntity getCurrentUser() throws EntityNotFoundException {
         CustomUserDetails details =
                 (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findByUserId(details.getUser().getUserId())

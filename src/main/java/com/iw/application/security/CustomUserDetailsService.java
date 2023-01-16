@@ -1,6 +1,6 @@
 package com.iw.application.security;
 
-import com.iw.application.data.entity.account.User;
+import com.iw.application.data.entity.account.UserEntity;
 import com.iw.application.data.service.account.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> response = userRepository.findByMail(username);
-        User user = response.orElseThrow(() -> new UsernameNotFoundException(ERROR_MSG + username));
-        return new CustomUserDetails(user);
+        Optional<UserEntity> response = userRepository.findByMail(username);
+        UserEntity userEntity = response.orElseThrow(() -> new UsernameNotFoundException(ERROR_MSG + username));
+        return new CustomUserDetails(userEntity);
     }
 }

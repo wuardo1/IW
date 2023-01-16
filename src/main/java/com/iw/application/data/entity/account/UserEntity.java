@@ -13,8 +13,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "user_table")
-public class User {
+@Table(name = "users")
+public class UserEntity {
     @Id
     @GeneratedValue
     @Type(type = "uuid-char")
@@ -32,29 +32,29 @@ public class User {
     private String occupation;
     private boolean important;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<BankAccount> bankAccounts;
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
+    private Set<BankAccountEntity> bankAccountEntities;
 
-    @ElementCollection(targetClass=UserGroup.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass= UserGroupEntity.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name="user_user_group")
     @Column(name="user_group") // Column name in user_user_group
-    public Collection<UserGroup> userGroups;
+    public Collection<UserGroupEntity> userGroupEntities;
 
-    public User() {}
+    public UserEntity() {}
 
-    public User(String mail, String password, Collection<UserGroup> userGroups) {
+    public UserEntity(String mail, String password, Collection<UserGroupEntity> userGroupEntities) {
         this.mail = mail;
         this.password = password;
-        this.userGroups = userGroups;
+        this.userGroupEntities = userGroupEntities;
     }
 
-    public Collection<UserGroup> getUserGroups() {
-        return userGroups;
+    public Collection<UserGroupEntity> getUserGroups() {
+        return userGroupEntities;
     }
 
     public List<String> getUserGroupsAsString() {
-        return userGroups.stream().map(Enum::toString).collect(Collectors.toList());
+        return userGroupEntities.stream().map(Enum::toString).collect(Collectors.toList());
     }
 
     public String getPassword() {
@@ -121,12 +121,12 @@ public class User {
         this.important = important;
     }
 
-    public void addBankAccount(BankAccount bankAccount) {
-        this.bankAccounts.add(bankAccount);
+    public void addBankAccount(BankAccountEntity bankAccountEntity) {
+        this.bankAccountEntities.add(bankAccountEntity);
     }
 
-    public void removeBankAccount(BankAccount bankAccount) {
-        this.bankAccounts.remove(bankAccount);
+    public void removeBankAccount(BankAccountEntity bankAccountEntity) {
+        this.bankAccountEntities.remove(bankAccountEntity);
     }
 
     public UUID getUserId() {
@@ -137,11 +137,11 @@ public class User {
         this.userId = userId;
     }
 
-    public Set<BankAccount> getBankAccounts() {
-        return bankAccounts;
+    public Set<BankAccountEntity> getBankAccounts() {
+        return bankAccountEntities;
     }
 
-    public void setBankAccounts(Set<BankAccount> bankAccounts) {
-        this.bankAccounts = bankAccounts;
+    public void setBankAccounts(Set<BankAccountEntity> bankAccountEntities) {
+        this.bankAccountEntities = bankAccountEntities;
     }
 }

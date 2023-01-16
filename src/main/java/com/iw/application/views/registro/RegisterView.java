@@ -1,7 +1,7 @@
 package com.iw.application.views.registro;
 
-import com.iw.application.data.entity.account.User;
-import com.iw.application.data.entity.account.UserGroup;
+import com.iw.application.data.entity.account.UserEntity;
+import com.iw.application.data.entity.account.UserGroupEntity;
 import com.iw.application.data.service.account.UserService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -64,10 +64,10 @@ public class RegisterView extends VerticalLayout {
         if (password.equals(passwordRepeated.getValue())
                 && Pattern.compile(PASSWORD_PATTERN).matcher(password).matches()
                 && Pattern.compile(EMAIL_PATTERN).matcher(mail).matches()) {
-            Collection<UserGroup> groups = new ArrayList<>();
-            groups.add(UserGroup.ROLE_USER);
-            User user = new User(mail, password, groups);
-            userService.addUser(user);
+            Collection<UserGroupEntity> groups = new ArrayList<>();
+            groups.add(UserGroupEntity.ROLE_USER);
+            UserEntity userEntity = new UserEntity(mail, password, groups);
+            userService.addUser(userEntity);
             Notification.show("User registered");
             clearForm();
         } else {

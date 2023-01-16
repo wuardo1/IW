@@ -1,6 +1,6 @@
 package com.iw.application.security;
 
-import com.iw.application.data.entity.account.User;
+import com.iw.application.data.entity.account.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
-    public final User user;
+    public final UserEntity userEntity;
 
     /**
      * Creates a new Instance for the given User
-     * @param user
+     * @param userEntity
      */
-    public CustomUserDetails(User user) {
-        this.user = user;
+    public CustomUserDetails(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class CustomUserDetails implements UserDetails {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         if (this.isEnabled()) {
-            user.getUserGroupsAsString().stream().forEach(userGroup ->
+            userEntity.getUserGroupsAsString().stream().forEach(userGroup ->
                     authorities.add(new SimpleGrantedAuthority(userGroup)));
         }
         return  authorities;
@@ -32,12 +32,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return userEntity.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getMail();
+        return userEntity.getMail();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CustomUserDetails implements UserDetails {
      * Returns the user for more details not needed by Spring Security
      * @return the user which this class represents
      */
-    public User getUser() {
-        return user;
+    public UserEntity getUser() {
+        return userEntity;
     }
 }

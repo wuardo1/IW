@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class CreditCard {
+@Table(name = "credit_cards")
+public class CreditCardEntity {
     @Id
     @GeneratedValue
     @Type(type = "uuid-char")

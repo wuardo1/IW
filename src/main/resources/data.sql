@@ -1,0 +1,1 @@
+INSERT INTO users (user_id, date_of_birth, first_name, important, last_name, mail, occupation, password, phone) VALUES ('d9819c24-7606-41c2-97f8-1cf576f58a78',null,null,false,null,'x@y.de',null,'$2a$10$8QwamsZIVgpb.FuL66iOveqC5Bt7ekV59HSAVYiAc/kBKKgpWLC2i',null);
