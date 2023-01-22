@@ -6,8 +6,6 @@ import com.iw.application.data.repositories.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
-
 @Service
 public class CreditCardService {
 
@@ -25,14 +23,14 @@ public class CreditCardService {
 //
 //    }
 
-    private int generateCCV() {
-        Random random = new Random();
-        return random.nextInt(100,1000);
-    }
-
-    private long generateCardNumber() {
-        Random random = new Random();
-        return random.nextLong(1000000000000000L,10000000000000000L);
-    }
+//    private int generateCCV() {
+//        Random random = new Random();
+//        return random.nextInt(100,1000);
+//    }
+//
+//    private long generateCardNumber() {
+//        Random random = new Random();
+//        return random.nextLong(1000000000000000L,10000000000000000L);
+//    }
     
 }
