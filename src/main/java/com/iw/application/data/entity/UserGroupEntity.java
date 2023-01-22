@@ -1,4 +1,4 @@
-package com.iw.application.data.entity.account;
+package com.iw.application.data.entity;
 
 public enum UserGroupEntity {
     ROLE_USER,

@@ -1,6 +1,6 @@
-package com.iw.application.data.service.account;
+package com.iw.application.data.repositories;
 
-import com.iw.application.data.entity.account.UserEntity;
+import com.iw.application.data.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

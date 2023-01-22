@@ -1,7 +1,8 @@
-package com.iw.application.data.service.account;
+package com.iw.application.data.service;
 
-import com.iw.application.data.entity.account.BankAccountEntity;
-import com.iw.application.data.entity.account.UserEntity;
+import com.iw.application.data.entity.BankAccountEntity;
+import com.iw.application.data.entity.UserEntity;
+import com.iw.application.data.repositories.UserRepository;
 import com.iw.application.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,17 +30,15 @@ public class UserService {
 
     public void addUser(UserEntity userEntity) {
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        userRepository.save(userEntity);
+        userRepository.saveAndFlush(userEntity);
     }
 
     public void createBankAccount() {
         UserEntity userEntity = getCurrentUser();
         BankAccountEntity bankAccountEntity = bankAccountService.createBankAccount(userEntity);
         userEntity.addBankAccount(bankAccountEntity);
-        userRepository.flush();
+        userRepository.saveAndFlush(userEntity);
     }
-
-
 
     public UserEntity getCurrentUser() throws EntityNotFoundException {
         CustomUserDetails details =

@@ -1,4 +1,4 @@
-package com.iw.application.data.entity.account;
+package com.iw.application.data.entity;
 
 
 import org.hibernate.annotations.Type;
@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 public class UserEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id", nullable = false)
     @Type(type = "uuid-char")
     private UUID userId;
 
@@ -127,6 +128,7 @@ public class UserEntity {
 
     public void removeBankAccount(BankAccountEntity bankAccountEntity) {
         this.bankAccountEntities.remove(bankAccountEntity);
+
     }
 
     public UUID getUserId() {

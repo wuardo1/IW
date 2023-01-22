@@ -15,60 +15,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
 
-//    private static final String LOGIN_PROCESSING_URL = "/login";
-//    private static final String LOGIN_FAILURE_URL = "/login?error";
-//    private static final String LOGIN_URL = "/login";
-
     /**
      * Require login to access internal pages and configure login form.
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-// TODO fyi the following is handled by the superclass VaadinWebSecurity
-//
-//        // Vaadin handles CSRF internally
-//        http.csrf().disable()
-//
-//                // Register our CustomRequestCache, which saves unauthorized access attempts, so the user is redirected after login.
-//                .requestCache().requestCache(new CustomRequestCache())
-//
-//                // Allow all Vaadin internal requests.
-//                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-//
-//                // Restrict access to our application.
-//                .and().authorizeRequests()
-//
-//
-//                // Allow all requests by logged-in users.
-//                .anyRequest().authenticated()
-//
-//                // Configure the login page.
-//                .and().formLogin()
-//                .loginPage(LOGIN_URL).permitAll()
-//                .loginProcessingUrl(LOGIN_PROCESSING_URL)
-//                .failureUrl(LOGIN_FAILURE_URL)
-//
-//                // Configure logout
-//                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
-
         super.configure(http);
 
         // This is important to register your login view to the
         // view access checker mechanism:
         setLoginView(http, LoginView.class);
-    }
 
-//  @Bean
-//  @Override
-//  public UserDetailsService userDetailsService() {
-//    UserDetails user = User.withUsername("user")
-//            .password("{noop}userpass")
-//            .roles("USER")
-//            .build();
-//
-//    return new InMemoryUserDetailsManager(user);
-//  }
+        http.formLogin().defaultSuccessUrl("/home"); // TODO
+    }
 
     /**
      * Allows access to static resources, bypassing Spring Security.

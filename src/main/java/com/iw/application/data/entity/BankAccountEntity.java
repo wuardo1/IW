@@ -1,15 +1,18 @@
-package com.iw.application.data.entity.account;
+package com.iw.application.data.entity;
 
 import org.hibernate.annotations.Type;
+import org.iban4j.Iban;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.UUID;
 
 @Entity
 @Table(name = "bank_accounts")
 public class BankAccountEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "bank_account_id", nullable = false)
     @Type(type = "uuid-char")
     private UUID bankAccountId;
 
@@ -17,27 +20,30 @@ public class BankAccountEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private Collection<TransactionEntity> transactions;
+
 //    @OneToOne(
-//            mappedBy = "bank_account",
+//            mappedBy = "bankAccount",
 //            cascade = CascadeType.REMOVE,
 //            orphanRemoval = true,
 //            fetch = FetchType.EAGER
 //    )
-//    private CreditCard creditCard;
+//    private CreditCardEntity creditCard;
 
-    private float balance;
-    private float creditLine;
+    private double balance;
+    private double creditLine;
 
-    private int accountNumber;
+    private String iban;
 
     public BankAccountEntity(UserEntity userEntity) {
         this.user = userEntity;
     }
 
-    public BankAccountEntity(UserEntity userEntity, int accountNumber) {
+    public BankAccountEntity(UserEntity userEntity, Iban iban) {
         this.user = userEntity;
         this.balance = 0;
-        this.accountNumber = accountNumber;
+        this.iban = iban.toString();
     }
 
     public BankAccountEntity() {
@@ -60,7 +66,7 @@ public class BankAccountEntity {
 //        this.creditCard = creditCard;
 //    }
 
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
@@ -68,15 +74,15 @@ public class BankAccountEntity {
         this.balance = balance;
     }
 
-    public int getAccountNumber() {
-        return accountNumber;
+    public Iban getIban() {
+        return Iban.valueOf(iban);
     }
 
-    public void setAccountNumber(int accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setIban(Iban iban) {
+        this.iban = iban.toString();
     }
 
-    public float getCreditLine() {
+    public double getCreditLine() {
         return creditLine;
     }
 
@@ -98,5 +104,17 @@ public class BankAccountEntity {
 
     public UUID getUUID() {
         return this.bankAccountId;
+    }
+
+    public void addTransaction(TransactionEntity transactionEntity) {
+        transactions.add(transactionEntity);
+    }
+
+    public Collection<TransactionEntity> getTransactions() {
+        return this.transactions;
+    }
+
+    public UUID getBankAccountId() {
+        return bankAccountId;
     }
 }

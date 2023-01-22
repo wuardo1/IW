@@ -54,9 +54,8 @@ import com.iw.application.components.appnav.AppNav;
 import com.iw.application.components.appnav.AppNavItem;
 import com.iw.application.security.SecurityService;
 import com.iw.application.views.about.AboutView;
-import com.iw.application.views.helloworld.HelloWorldView;
-import com.iw.application.views.login.LoginView;
-import com.iw.application.views.registro.RegisterView;
+import com.iw.application.views.banking.ManageView;
+import com.iw.application.views.banking.TransactionHistoryView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -64,6 +63,8 @@ import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -72,22 +73,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * The main view is a top-level placeholder for other views.
  */
-public class MainLayout extends AppLayout {
+public class InternalLayout extends AppLayout {
 
-    @Autowired
-    private SecurityService securityService;
+    private final SecurityService securityService;
 
     private H2 viewTitle;
 
-    private Button logoutButton = new Button("logout");
+    private final Button logoutButton = new Button("logout");
 
-    public MainLayout() {
+    public InternalLayout(@Autowired SecurityService securityService) {
+        this.securityService = securityService;
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
-        addHeaderContent();
+        addNavbarContent();
     }
 
-    private void addHeaderContent() {
+    private void addDrawerContent() {
+        H1 appName = new H1("My App");
+        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        Header header = new Header(appName);
+
+        Scroller scroller = new Scroller(createNavigationForDrawer());
+
+        addToDrawer(header, scroller, createFooterForDrawer());
+    }
+
+    private AppNav createNavigationForDrawer() {
+        // AppNav is not yet an official component.
+        // For documentation, visit https://github.com/vaadin/vcf-nav#readme
+        AppNav nav = new AppNav();
+
+        nav.addItem(new AppNavItem("Manage Accounts", ManageView.class, "la la-user"));
+        nav.addItem(new AppNavItem("Transaction History", TransactionHistoryView.class, "la la-user"));
+        nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
+
+        return nav;
+    }
+
+    private Footer createFooterForDrawer() {
+        Footer layout = new Footer();
+
+        return layout;
+    }
+
+    private void addNavbarContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
@@ -98,37 +127,15 @@ public class MainLayout extends AppLayout {
             securityService.logout();
         });
 
-        addToNavbar(true, toggle, viewTitle, logoutButton);
+        HorizontalLayout headerComponent = new HorizontalLayout();
+        headerComponent.setSizeFull();
+        headerComponent.add(viewTitle);
+        headerComponent.add(logoutButton);
+        headerComponent.setVerticalComponentAlignment(FlexComponent.Alignment.END, logoutButton);
+
+        addToNavbar(true, toggle, headerComponent);
     }
 
-    private void addDrawerContent() {
-        H1 appName = new H1("My App");
-        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-        Header header = new Header(appName);
-
-        Scroller scroller = new Scroller(createNavigation());
-
-        addToDrawer(header, scroller, createFooter());
-    }
-
-    private AppNav createNavigation() {
-        // AppNav is not yet an official component.
-        // For documentation, visit https://github.com/vaadin/vcf-nav#readme
-        AppNav nav = new AppNav();
-
-        nav.addItem(new AppNavItem("Hello World", HelloWorldView.class, "la la-globe"));
-        nav.addItem(new AppNavItem("Login", LoginView.class, "la la-user"));
-        nav.addItem(new AppNavItem("Register", RegisterView.class, "la la-user"));
-        nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
-
-        return nav;
-    }
-
-    private Footer createFooter() {
-        Footer layout = new Footer();
-
-        return layout;
-    }
 
     @Override
     protected void afterNavigation() {

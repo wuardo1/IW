@@ -1,5 +1,6 @@
 package com.iw.application.views.login;
 
+import com.iw.application.views.PublicLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -9,7 +10,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-@Route("login")
+@Route(value = "login", layout = PublicLayout.class)
 @PageTitle("Login | ucaBank")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {

@@ -1,7 +1,10 @@
 package com.iw.application.data.service.account;
 
-import com.iw.application.data.entity.account.BankAccountEntity;
-import com.iw.application.data.entity.account.UserEntity;
+import com.iw.application.data.entity.BankAccountEntity;
+import com.iw.application.data.entity.UserEntity;
+import com.iw.application.data.repositories.BankAccountRepository;
+import com.iw.application.data.repositories.TransactionRepository;
+import com.iw.application.data.service.BankAccountService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +19,17 @@ class BankAccountServiceUnitTest {
     @Mock
     BankAccountRepository bankAccountRepository;
 
+    @Mock
+    TransactionRepository transactionRepository;
+
     @InjectMocks
     BankAccountService bankAccountService;
 
     @BeforeEach
     void setUp() {
         bankAccountRepository = Mockito.mock(BankAccountRepository.class);
-        bankAccountService = new BankAccountService(bankAccountRepository);
+        transactionRepository = Mockito.mock(TransactionRepository.class);
+        bankAccountService = new BankAccountService(bankAccountRepository, transactionRepository);
     }
 
     @AfterEach
@@ -33,13 +40,21 @@ class BankAccountServiceUnitTest {
     void createBankAccount() {
         UserEntity userEntity = new UserEntity();
 
-        bankAccountService.setSeed(10);
-
         BankAccountEntity bankAccountEntity = bankAccountService.createBankAccount(userEntity);
 
-        Assertions.assertThat(bankAccountEntity.getAccountNumber()).isEqualTo(5113);
         Assertions.assertThat(bankAccountEntity.getBalance()).isEqualTo(0);
-        //Assertions.assertThat(bankAccountEntity.getUUID()).
+        // TODO further tests
+    }
 
+    @Test
+    void makeTransaction() throws Exception {
+        /*
+        Iban a = Iban.valueOf("ES1220389717824292519288");
+        Iban b = Iban.valueOf("ES7131904395848711939975");
+        bankAccountService.makeTransaction(Iban.valueOf("ES1220389717824292519288"),
+                Iban.valueOf("ES7131904395848711939975"), 5);
+        Assertions.assertThat(bankAccountService.getBankAccountByIban(a).getBalance()).isEqualTo(45);
+        Assertions.assertThat(bankAccountService.getBankAccountByIban(b).getBalance()).isEqualTo(15);
+         */
     }
 }

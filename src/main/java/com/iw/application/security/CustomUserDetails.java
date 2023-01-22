@@ -1,6 +1,6 @@
 package com.iw.application.security;
 
-import com.iw.application.data.entity.account.UserEntity;
+import com.iw.application.data.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,6 @@
 package com.iw.application.views.about;
 
-import com.iw.application.views.MainLayout;
+import com.iw.application.views.InternalLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("About")
-@Route(value = "about", layout = MainLayout.class)
+@Route(value = "about", layout = InternalLayout.class)
 @AnonymousAllowed
 public class AboutView extends VerticalLayout {
 
