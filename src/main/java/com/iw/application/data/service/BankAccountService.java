@@ -9,10 +9,13 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BankAccountService {
@@ -28,28 +31,32 @@ public class BankAccountService {
         this.transactionRepository = transactionRepository;
     }
 
-
-    public void makeTransaction(Iban sourceIban, Iban destinationIban, double amount) throws Exception {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void makeTransaction(Iban sourceIban, Iban destinationIban, double amount) throws IllegalArgumentException {
         BankAccountEntity sourceAccount = getBankAccountByIban(sourceIban);
 
         BankAccountEntity destinationAccount = getBankAccountByIban(destinationIban);
 
         Date currentDate = new Date();
-        TransactionEntity sourceTransaction = new TransactionEntity(sourceIban, destinationIban, currentDate, amount);
-        TransactionEntity destinationTransaction = new TransactionEntity(sourceIban, destinationIban, currentDate, amount);
+        TransactionEntity sourceTransaction = new TransactionEntity(sourceAccount, sourceIban, destinationIban, currentDate, amount);
+        TransactionEntity destinationTransaction = new TransactionEntity(destinationAccount, sourceIban, destinationIban, currentDate, amount);
 
         if (sourceAccount.getAmountDeductible() < amount || amount < 0) { // TODO amount checker
-            throw new Exception(ILLEGAL_TRANSACTION_AMOUNT_TEXT); // TODO change exception type
+            throw new IllegalArgumentException(ILLEGAL_TRANSACTION_AMOUNT_TEXT); // TODO change exception type
         }
 
         sourceAccount.reduceBalance(amount);
         sourceAccount.addTransaction(sourceTransaction);
         destinationAccount.increaseBalance(amount);
         destinationAccount.addTransaction(destinationTransaction);
+
+        // Update database bank account
         bankAccountRepository.save(sourceAccount);
         bankAccountRepository.save(destinationAccount);
+
+        // Update database transaction
         transactionRepository.save(sourceTransaction);
-        transactionRepository.saveAndFlush(destinationTransaction);
+        transactionRepository.save(destinationTransaction);
     }
 
     public BankAccountEntity createBankAccount(UserEntity userEntity) {
@@ -81,11 +88,10 @@ public class BankAccountService {
     }
 
 
-    // tried to fix jpa session closing...
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<TransactionEntity> getTransactionsToBankAccount(BankAccountEntity bankAccount) {
-        return null;
-//        List<TransactionEntity> tr = transactionRepository.findAll();
-//        return tr.stream().filter(transactionEntity ->
-//                transactionEntity.getBankAccount().getIban() == bankAccount.getIban()).collect(Collectors.toList());
+        List<TransactionEntity> tr = transactionRepository.findAll();
+        return tr.stream().filter(transactionEntity ->
+                transactionEntity.getBankAccount().getIban().equals(bankAccount.getIban())).collect(Collectors.toList());
     }
 }

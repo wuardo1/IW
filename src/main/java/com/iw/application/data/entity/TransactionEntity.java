@@ -5,6 +5,7 @@ import org.iban4j.Iban;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "transactions")
@@ -13,7 +14,7 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "transaction_id", nullable = false)
     @Type(type = "uuid-char")
-    private Long transactionId;
+    private UUID transactionId;
 
     private String sourceIban;
 
@@ -23,22 +24,27 @@ public class TransactionEntity {
 
     private double amount;
 
+    @ManyToOne()
+    @JoinColumn(name = "bank_account_id")
+    private BankAccountEntity bankAccount;
+
     public TransactionEntity() {
     }
 
-    public TransactionEntity(Iban sourceIban, Iban destinationIban, Date dateExecuted, double amount) {
+    public TransactionEntity(BankAccountEntity bankAccount, Iban sourceIban, Iban destinationIban, Date dateExecuted, double amount) {
         this.sourceIban = sourceIban.toString();
         this.destinationIban = destinationIban.toString();
         this.amount = amount;
         this.dateExecuted = dateExecuted.getTime();
+        this.bankAccount = bankAccount;
     }
 
 
-    public Long getTransactionId() {
+    public UUID getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Long transactionId) {
+    public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -72,5 +78,13 @@ public class TransactionEntity {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public BankAccountEntity getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccountEntity bankAccount) {
+        this.bankAccount = bankAccount;
     }
 }

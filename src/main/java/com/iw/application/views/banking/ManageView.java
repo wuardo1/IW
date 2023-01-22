@@ -36,8 +36,8 @@ public class ManageView extends VerticalLayout implements AfterNavigationObserve
 
     private final Grid<BankAccountEntity> grid = new Grid<>();
 
-    @Autowired
-    public ManageView(BankAccountService bankAccountService, UserService userService) {
+    public ManageView(@Autowired BankAccountService bankAccountService,
+                      @Autowired UserService userService) {
         this.bankAccountService = bankAccountService;
         this.userService = userService;
 
@@ -48,6 +48,7 @@ public class ManageView extends VerticalLayout implements AfterNavigationObserve
 
         grid.setHeight("100%");
         grid.addComponentColumn(this::createItem);
+        grid.setVerticalScrollingEnabled(true);
         add(grid);
 
         addAccount.addClickListener(event -> {
@@ -105,7 +106,8 @@ public class ManageView extends VerticalLayout implements AfterNavigationObserve
                         bankAccount.getIban(),
                         Iban.valueOf(destinationAccount.getValue()),
                         amount.getValue());
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
+                System.out.println("hi");
                 // TODO show error message on balance to low exception or illegal format or account not found
             }
             getGridData();
@@ -119,7 +121,6 @@ public class ManageView extends VerticalLayout implements AfterNavigationObserve
         });
 
         item.add(accountData, accountManager);
-
         return item;
     }
 
