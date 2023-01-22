@@ -4,7 +4,7 @@ import org.hibernate.annotations.Type;
 import org.iban4j.Iban;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,16 +20,16 @@ public class BankAccountEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Collection<TransactionEntity> transactions;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bankAccount")
+    private Set<TransactionEntity> transactions;
 
-//    @OneToOne(
-//            mappedBy = "bankAccount",
-//            cascade = CascadeType.REMOVE,
-//            orphanRemoval = true,
-//            fetch = FetchType.EAGER
-//    )
-//    private CreditCardEntity creditCard;
+    @OneToOne(
+            mappedBy = "bankAccount",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private CreditCardEntity creditCard;
 
     private double balance;
     private double creditLine;
@@ -110,7 +110,7 @@ public class BankAccountEntity {
         transactions.add(transactionEntity);
     }
 
-    public Collection<TransactionEntity> getTransactions() {
+    public Set<TransactionEntity> getTransactions() {
         return this.transactions;
     }
 
