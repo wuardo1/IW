@@ -46,6 +46,17 @@ public class BankAccountEntity {
         this.iban = iban.toString();
     }
 
+    public BankAccountEntity(UserEntity user, Iban iban, double balance, CreditCardEntity creditCard,
+                             Set<TransactionEntity> transactions, UUID id, double creditLine) {
+        this.user = user;
+        this.iban = iban.toString();
+        this.balance = balance;
+        this.creditCard = creditCard;
+        this.transactions = transactions;
+        this.bankAccountId = id;
+        this.creditLine = creditLine;
+    }
+
     public BankAccountEntity() {
 
     }
@@ -94,11 +105,8 @@ public class BankAccountEntity {
         return balance + creditLine; // TODO debt ??
     }
 
-    public void reduceBalance(double amount) {
-        balance -= amount;
-    }
 
-    public void increaseBalance(double amount) {
+    public void editBalance(double amount) {
         balance += amount;
     }
 

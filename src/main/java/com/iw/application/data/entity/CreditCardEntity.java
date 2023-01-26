@@ -3,7 +3,8 @@ package com.iw.application.data.entity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "credit_cards")
@@ -12,37 +13,33 @@ public class CreditCardEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "credit_card_id", nullable = false)
     @Type(type = "uuid-char")
-    private int creditCardId;
+    private UUID creditCardId;
 
     @OneToOne()
     @JoinColumn(name = "bank_account_id")
     private BankAccountEntity bankAccount;
 
+    private String cardNumber;
 
+    private String ccv;
 
-    private long cardNumber;
-
-    private int ccv;
-
-    private LocalDate cardValidity;
+    private long validityDate;
 
     private double currentDebt;
+
+    private long issueDate;
 
     public CreditCardEntity() {
 
     }
 
-    public CreditCardEntity(BankAccountEntity bankAccount) {
+    public CreditCardEntity(BankAccountEntity bankAccount, String cardNumber, String ccv, Date issueDate,
+                            Date validityDate) {
         this.bankAccount = bankAccount;
-
-    }
-
-    public int getCreditCardId() {
-        return creditCardId;
-    }
-
-    public void setCreditCardId(int creditCardId) {
-        this.creditCardId = creditCardId;
+        this.cardNumber = cardNumber;
+        this.ccv = ccv;
+        this.issueDate = issueDate.getTime();
+        this.validityDate = validityDate.getTime();
     }
 
     public BankAccountEntity getBankAccount() {
@@ -53,28 +50,28 @@ public class CreditCardEntity {
         this.bankAccount = bankAccount;
     }
 
-    public long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public int getCcv() {
+    public String getCcv() {
         return ccv;
     }
 
-    public void setCcv(int ccv) {
+    public void setCcv(String ccv) {
         this.ccv = ccv;
     }
 
-    public LocalDate getCardValidity() {
-        return cardValidity;
+    public Date getValidityDate() {
+        return new Date(validityDate);
     }
 
-    public void setCardValidity(LocalDate cardValidity) {
-        this.cardValidity = cardValidity;
+    public void setValidityDate(Date validityDate) {
+        this.validityDate = validityDate.getTime();
     }
 
     public double getCurrentDebt() {
@@ -83,5 +80,9 @@ public class CreditCardEntity {
 
     public void setCurrentDebt(double currentDebt) {
         this.currentDebt = currentDebt;
+    }
+
+    public Date getIssueDate() {
+        return new Date(issueDate);
     }
 }

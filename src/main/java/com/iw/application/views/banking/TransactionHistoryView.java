@@ -3,6 +3,7 @@ package com.iw.application.views.banking;
 import com.iw.application.data.entity.BankAccountEntity;
 import com.iw.application.data.entity.TransactionEntity;
 import com.iw.application.data.service.BankAccountService;
+import com.iw.application.data.service.TransactionService;
 import com.iw.application.data.service.UserService;
 import com.iw.application.views.InternalLayout;
 import com.vaadin.flow.component.Component;
@@ -26,12 +27,15 @@ public class TransactionHistoryView extends VerticalLayout {
 
     BankAccountService bankAccountService;
 
+    TransactionService transactionService;
+
     private final Grid<TransactionEntity> grid = new Grid<>();
 
     private final Select<BankAccountEntity> bankAccountSelect= new Select<>();
 
     public TransactionHistoryView(@Autowired UserService userService,
-                                  @Autowired BankAccountService bankAccountService) {
+                                  @Autowired BankAccountService bankAccountServic,
+                                  @Autowired TransactionService transactionService) {
         this.userService = userService;
         this.bankAccountService = bankAccountService;
 
@@ -43,16 +47,15 @@ public class TransactionHistoryView extends VerticalLayout {
         grid.addComponentColumn(this::createItem);
         grid.setVerticalScrollingEnabled(true);
         add(grid);
-
-        bankAccountSelect.addValueChangeListener(bankAccountEntityEvent -> {
-            getGridData(bankAccountEntityEvent.getValue());
-        });
     }
 
     private Component createBankAccountSelect() {
         bankAccountSelect.setLabel("Select Bank Account");
         bankAccountSelect.setItemLabelGenerator(bankAccount -> bankAccount.getIban().toString());
         bankAccountSelect.setItems(userService.getCurrentUser().getBankAccounts());
+        bankAccountSelect.addValueChangeListener(bankAccountEntityEvent -> {
+            getGridData(bankAccountEntityEvent.getValue());
+        });
 
         return bankAccountSelect;
     }
@@ -73,7 +76,7 @@ public class TransactionHistoryView extends VerticalLayout {
     }
 
     private void getGridData(BankAccountEntity bankAccount) {
-        List<TransactionEntity> transactions = bankAccountService.getTransactionsToBankAccount(bankAccount);
+        List<TransactionEntity> transactions = transactionService.getTransactionsToBankAccount(bankAccount);
         grid.setItems(transactions);
     }
 }
