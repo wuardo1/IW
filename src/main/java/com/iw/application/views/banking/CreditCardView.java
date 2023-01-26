@@ -17,6 +17,8 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.PermitAll;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Route(value = "cards", layout = InternalLayout.class)
 @PageTitle("Manage Credit Cards | ucaBank")
@@ -67,12 +69,50 @@ public class CreditCardView extends VerticalLayout {
         Span cardNumber = new Span(creditCard.getCardNumber());
         cardNumberLayout.add(cardNumberLabel, cardNumber);
 
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
         HorizontalLayout issueDateLayout = new HorizontalLayout();
         Span issueDateLabel = new Span("Issue Date: ");
-        Span issueDate = new Span(creditCard.getIssueDate().toString());
+        Span issueDate = new Span(dateFormat.format(creditCard.getIssueDate()));
         issueDateLayout.add(issueDateLabel, issueDate);
 
-        editCreditCardLayout.add(cardNumberLayout, issueDateLayout);
+        HorizontalLayout validityDateLayout = new HorizontalLayout();
+        Span validityDateLabel = new Span("Validity Date: ");
+        Span validityDate = new Span(dateFormat.format(creditCard.getValidityDate()));
+        validityDateLayout.add(validityDateLabel, validityDate);
+
+        HorizontalLayout debtLayout = new HorizontalLayout();
+        Span debtLabel = new Span("Current Debt: ");
+        Span debt = new Span(String.valueOf(creditCard.getCurrentDebt()));
+        debtLayout.add(debtLabel, debt);
+
+        HorizontalLayout statusLayout = new HorizontalLayout();
+        Span statusLabel = new Span("Activity status: ");
+        Span status = new Span(String.valueOf(creditCard.isActive()));
+        statusLayout.add(statusLabel, status);
+
+        Button deactivate = new Button("Deactivate");
+        deactivate.addClickListener(click -> {
+            creditCardService.setActive(creditCard, false);
+            this.remove(editCreditCardLayout);
+            this.add(createEditCreditCardView(creditCard));
+        });
+        Button activate = new Button("Activate");
+        activate.addClickListener(click -> {
+            creditCardService.setActive(creditCard, true);
+            this.remove(editCreditCardLayout);
+            this.add(createEditCreditCardView(creditCard));
+        });
+        HorizontalLayout button = new HorizontalLayout();
+
+        if (creditCard.isActive()) {
+            button.add(deactivate);
+        } else {
+            button.add(activate);
+        }
+
+        editCreditCardLayout.add(cardNumberLayout, issueDateLayout, validityDateLayout, debtLayout, statusLayout,
+                button);
         return editCreditCardLayout;
     }
 
@@ -80,7 +120,9 @@ public class CreditCardView extends VerticalLayout {
         HorizontalLayout buttonLayout = new HorizontalLayout();
 
         createCreditCard.addClickListener(event -> {
-            creditCardService.createCreditCard(bankAccount);
+            CreditCardEntity creditCard = creditCardService.createCreditCard(bankAccount);
+            this.remove(buttonLayout);
+            this.add(createEditCreditCardView(creditCard));
         });
 
         buttonLayout.add(createCreditCard);

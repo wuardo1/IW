@@ -22,6 +22,7 @@ public class CreditCardService {
     private static final int DEFAULT_VALIDITY_IN_YEARS = 5;
     private static final int DEFAULT_LIMIT = 500;
     private static final int DEFAULT_DEBT = 0;
+    private static final boolean DEFAULT_ACTIVE = true;
 
     public CreditCardService (@Autowired CreditCardRepository creditCardRepository,
                               @Autowired UserService userService) {
@@ -36,7 +37,7 @@ public class CreditCardService {
         calendar.add(Calendar.YEAR, DEFAULT_VALIDITY_IN_YEARS);
         Date validityDate = calendar.getTime();
         CreditCardEntity creditCard = new CreditCardEntity(bankAccount, generateCardNumber(), generateCCV(),
-                issueDate, validityDate, DEFAULT_LIMIT, DEFAULT_DEBT);
+                issueDate, validityDate, DEFAULT_LIMIT, DEFAULT_DEBT, DEFAULT_ACTIVE);
         creditCardRepository.save(creditCard);
         return creditCard;
     }
@@ -65,5 +66,10 @@ public class CreditCardService {
 
     public CreditCardEntity getCreditCardToBankAccount(BankAccountEntity bankAccount) {
         return creditCardRepository.findByBankAccount(bankAccount);
+    }
+
+    public void setActive(CreditCardEntity creditCard, boolean active) {
+        creditCard.setActive(active);
+        creditCardRepository.save(creditCard);
     }
 }

@@ -27,23 +27,26 @@ public class CreditCardEntity {
 
     private double currentDebt;
 
-    private double limit;
+    private double cardLimit;
 
     private long issueDate;
+
+    private boolean active;
 
     public CreditCardEntity() {
 
     }
 
     public CreditCardEntity(BankAccountEntity bankAccount, String cardNumber, String ccv, Date issueDate,
-                            Date validityDate, double limit, double currentDebt) {
+                            Date validityDate, double cardLimit, double currentDebt, boolean active) {
         this.bankAccount = bankAccount;
         this.cardNumber = cardNumber;
         this.ccv = ccv;
         this.issueDate = issueDate.getTime();
         this.validityDate = validityDate.getTime();
-        this.limit = limit;
+        this.cardLimit = cardLimit;
         this.currentDebt = currentDebt;
+        this.active = active;
     }
 
 
@@ -97,5 +100,13 @@ public class CreditCardEntity {
 
     public Date getIssueDate() {
         return new Date(issueDate);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

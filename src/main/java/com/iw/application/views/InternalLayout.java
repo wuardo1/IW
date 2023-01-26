@@ -54,6 +54,7 @@ import com.iw.application.components.appnav.AppNav;
 import com.iw.application.components.appnav.AppNavItem;
 import com.iw.application.security.SecurityService;
 import com.iw.application.views.about.AboutView;
+import com.iw.application.views.banking.CreditCardView;
 import com.iw.application.views.banking.ManageView;
 import com.iw.application.views.banking.TransactionHistoryView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -104,6 +105,7 @@ public class InternalLayout extends AppLayout {
         AppNav nav = new AppNav();
 
         nav.addItem(new AppNavItem("Manage Accounts", ManageView.class, "la la-user"));
+        nav.addItem(new AppNavItem("Credit Cards", CreditCardView.class, "la la-user"));
         nav.addItem(new AppNavItem("Transaction History", TransactionHistoryView.class, "la la-user"));
         nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
 
