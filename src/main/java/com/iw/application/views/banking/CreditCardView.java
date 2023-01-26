@@ -8,6 +8,7 @@ import com.iw.application.data.service.UserService;
 import com.iw.application.views.InternalLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -22,10 +23,9 @@ import javax.annotation.security.PermitAll;
 @PermitAll
 public class CreditCardView extends VerticalLayout {
 
-    BankAccountService bankAccountService;
-    UserService userService;
-
-    CreditCardService creditCardService;
+    private final BankAccountService bankAccountService;
+    private final UserService userService;
+    private final CreditCardService creditCardService;
 
     private final Button createCreditCard = new Button("Create Credit Card");
 
@@ -43,9 +43,9 @@ public class CreditCardView extends VerticalLayout {
     private void renderCreditCardScreen(BankAccountEntity bankAccount) {
         CreditCardEntity creditCard = creditCardService.getCreditCardToBankAccount(bankAccount);
         if (creditCard != null) {
-            // TODO
+            this.add(createEditCreditCardView(creditCard));
         } else {
-            this.add(createCreditCardButton(bankAccount));
+            this.add(createCreateCreditCardButton(bankAccount));
         }
     }
 
@@ -59,7 +59,24 @@ public class CreditCardView extends VerticalLayout {
         return bankAccountSelect;
     }
 
-    private Component createCreditCardButton(BankAccountEntity bankAccount) {
+    private Component createEditCreditCardView(CreditCardEntity creditCard) {
+        VerticalLayout editCreditCardLayout = new VerticalLayout();
+
+        HorizontalLayout cardNumberLayout = new HorizontalLayout();
+        Span cardNumberLabel = new Span("Card number: ");
+        Span cardNumber = new Span(creditCard.getCardNumber());
+        cardNumberLayout.add(cardNumberLabel, cardNumber);
+
+        HorizontalLayout issueDateLayout = new HorizontalLayout();
+        Span issueDateLabel = new Span("Issue Date: ");
+        Span issueDate = new Span(creditCard.getIssueDate().toString());
+        issueDateLayout.add(issueDateLabel, issueDate);
+
+        editCreditCardLayout.add(cardNumberLayout, issueDateLayout);
+        return editCreditCardLayout;
+    }
+
+    private Component createCreateCreditCardButton(BankAccountEntity bankAccount) {
         HorizontalLayout buttonLayout = new HorizontalLayout();
 
         createCreditCard.addClickListener(event -> {

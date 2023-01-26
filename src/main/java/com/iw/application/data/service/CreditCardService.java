@@ -19,6 +19,10 @@ public class CreditCardService {
 
     private final UserService userService;
 
+    private static final int DEFAULT_VALIDITY_IN_YEARS = 5;
+    private static final int DEFAULT_LIMIT = 500;
+    private static final int DEFAULT_DEBT = 0;
+
     public CreditCardService (@Autowired CreditCardRepository creditCardRepository,
                               @Autowired UserService userService) {
         this.creditCardRepository = creditCardRepository;
@@ -29,10 +33,10 @@ public class CreditCardService {
         Date issueDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(issueDate);
-        calendar.add(Calendar.YEAR, 5);
+        calendar.add(Calendar.YEAR, DEFAULT_VALIDITY_IN_YEARS);
         Date validityDate = calendar.getTime();
         CreditCardEntity creditCard = new CreditCardEntity(bankAccount, generateCardNumber(), generateCCV(),
-                issueDate, validityDate);
+                issueDate, validityDate, DEFAULT_LIMIT, DEFAULT_DEBT);
         creditCardRepository.save(creditCard);
         return creditCard;
     }

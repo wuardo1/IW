@@ -27,6 +27,8 @@ public class CreditCardEntity {
 
     private double currentDebt;
 
+    private double limit;
+
     private long issueDate;
 
     public CreditCardEntity() {
@@ -34,12 +36,23 @@ public class CreditCardEntity {
     }
 
     public CreditCardEntity(BankAccountEntity bankAccount, String cardNumber, String ccv, Date issueDate,
-                            Date validityDate) {
+                            Date validityDate, double limit, double currentDebt) {
         this.bankAccount = bankAccount;
         this.cardNumber = cardNumber;
         this.ccv = ccv;
         this.issueDate = issueDate.getTime();
         this.validityDate = validityDate.getTime();
+        this.limit = limit;
+        this.currentDebt = currentDebt;
+    }
+
+
+    public UUID getCreditCardId() {
+        return creditCardId;
+    }
+
+    public void setCreditCardId(UUID creditCardId) {
+        this.creditCardId = creditCardId;
     }
 
     public BankAccountEntity getBankAccount() {
