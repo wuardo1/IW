@@ -1,6 +1,7 @@
 package com.iw.application.data.service;
 
 import com.iw.application.data.entity.BankAccountEntity;
+import com.iw.application.data.entity.CreditCardEntity;
 import com.iw.application.data.entity.UserEntity;
 import com.iw.application.data.repositories.BankAccountRepository;
 import org.iban4j.CountryCode;
@@ -14,12 +15,9 @@ import javax.persistence.EntityNotFoundException;
 
 @Service
 public class BankAccountService {
-    private static final String BANK_ACCOUNT_NOT_FOUND_TEXT = "Bank Account with requested account number not found.";
+    private static final String BANK_ACCOUNT_NOT_FOUND_TEXT = "Bank Account was not found.";
     private static final String ILLEGAL_TRANSACTION_AMOUNT_TEXT = "The amount to be transferred is not allowed.";
     private static final String SAME_ACCOUNT_TRANSACTION_TEXT = "Source and destination accounts must be different.";
-    private static final String ACCOUNT_HAS_TRANSACTIONS_TEXT = "Bank account has transactions and cannot be removed.";
-    private static final String NULL_IBAN_TEXT = "IBAN cannot be null.";
-    private static final String NULL_ACCOUNT_TEXT = "Bank account cannot be null.";
 
     private final BankAccountRepository bankAccountRepository;
     private final TransactionService transactionService;
@@ -40,6 +38,10 @@ public class BankAccountService {
             throw new IllegalArgumentException(ILLEGAL_TRANSACTION_AMOUNT_TEXT);
         }
 
+        if (sourceIban.equals(destinationIban)) {
+            throw new IllegalArgumentException(SAME_ACCOUNT_TRANSACTION_TEXT);
+        }
+
         sourceAccount.addTransaction(transactionService.addTransaction(
                 sourceAccount, sourceAccount.getIban(), destinationIban, amount));
 
@@ -51,6 +53,34 @@ public class BankAccountService {
 
         destinationAccount.editBalance(amount);
         bankAccountRepository.save(destinationAccount);
+    }
+
+    public void makeWithdrawal(Iban iban, double amount) {
+        BankAccountEntity bankAccount = getBankAccountByIban(iban);
+
+        if (bankAccount.getAmountDeductible() < amount || amount <= 0) {
+            throw new IllegalArgumentException(ILLEGAL_TRANSACTION_AMOUNT_TEXT);
+        }
+
+        bankAccount.addTransaction(transactionService.addWithdrawalOrDeposit(
+                bankAccount, -amount));
+
+        bankAccount.editBalance(-amount);
+        bankAccountRepository.save(bankAccount);
+    }
+
+    public void makeDeposit(Iban iban, double amount) {
+        BankAccountEntity bankAccount = getBankAccountByIban(iban);
+
+        if (amount <= 0) {
+            throw new IllegalArgumentException(ILLEGAL_TRANSACTION_AMOUNT_TEXT);
+        }
+
+        bankAccount.addTransaction(transactionService.addWithdrawalOrDeposit(
+                bankAccount, amount));
+
+        bankAccount.editBalance(amount);
+        bankAccountRepository.save(bankAccount);
     }
 
     public BankAccountEntity createBankAccount(UserEntity userEntity) {
@@ -77,5 +107,15 @@ public class BankAccountService {
     public BankAccountEntity getBankAccountByIban(Iban iban) throws EntityNotFoundException {
         return bankAccountRepository.findByIban(iban.toString())
                 .orElseThrow(() -> new EntityNotFoundException(BANK_ACCOUNT_NOT_FOUND_TEXT));
+    }
+
+    public void makeCreditCardPayment(CreditCardEntity creditCard, double amount) {
+        BankAccountEntity bankAccount = bankAccountRepository.findByCreditCard_CreditCardId(creditCard.getCreditCardId())
+                .orElseThrow(() -> new EntityNotFoundException(BANK_ACCOUNT_NOT_FOUND_TEXT));
+
+        bankAccount.addTransaction(transactionService.addPayment(bankAccount, amount));
+
+        bankAccount.editBalance(-amount);
+        bankAccountRepository.save(bankAccount);
     }
 }

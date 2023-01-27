@@ -109,4 +109,12 @@ public class CreditCardEntity {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public double getCardLimit() {
+        return cardLimit;
+    }
+
+    public void setCardLimit(double cardLimit) {
+        this.cardLimit = cardLimit;
+    }
 }

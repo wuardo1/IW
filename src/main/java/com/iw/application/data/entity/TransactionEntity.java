@@ -31,7 +31,14 @@ public class TransactionEntity {
     public TransactionEntity() {
     }
 
-    public TransactionEntity(BankAccountEntity bankAccount, Iban sourceIban, Iban destinationIban, Date dateExecuted, double amount) {
+    public TransactionEntity(BankAccountEntity bankAccount, Date date, double amount) {
+        this.bankAccount = bankAccount;
+        this.dateExecuted = date.getTime();
+        this.amount = amount;
+    }
+
+    public TransactionEntity(BankAccountEntity bankAccount, Iban sourceIban, Iban destinationIban, Date dateExecuted,
+                             double amount) {
         this.sourceIban = sourceIban.toString();
         this.destinationIban = destinationIban.toString();
         this.amount = amount;

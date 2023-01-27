@@ -27,6 +27,18 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
+    public TransactionEntity addPayment(BankAccountEntity bankAccount, double amount) {
+        Date currentDate = new Date();
+        TransactionEntity transaction = new TransactionEntity(bankAccount, currentDate, amount);
+        return transactionRepository.save(transaction);
+    }
+
+    public TransactionEntity addWithdrawalOrDeposit(BankAccountEntity bankAccount, double amount) {
+        Date currentDate = new Date();
+        TransactionEntity transaction = new TransactionEntity(bankAccount, currentDate, amount);
+        return transactionRepository.save(transaction);
+    }
+
     public List<TransactionEntity> getTransactionsToBankAccount(BankAccountEntity bankAccount) {
         return transactionRepository.findAllByBankAccount(bankAccount);
     }

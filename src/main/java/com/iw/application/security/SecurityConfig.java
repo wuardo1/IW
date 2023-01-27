@@ -9,11 +9,14 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
+    private static final String LOGOUT_URL = "/";
+    private static final String SUCCESS_URL = "/home";
 
     /**
      * Require login to access internal pages and configure login form.
@@ -21,13 +24,21 @@ public class SecurityConfig extends VaadinWebSecurity {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.csrf().ignoringRequestMatchers(new AntPathRequestMatcher("/api/**"));
+        http.authorizeRequests()
+                .requestMatchers(
+                        new AntPathRequestMatcher("/images/*.png"),
+                        new AntPathRequestMatcher("/swagger-ui.html"),
+                        new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/**")).anonymous();
+
         super.configure(http);
 
         // This is important to register your login view to the
         // view access checker mechanism:
-        setLoginView(http, LoginView.class);
+        setLoginView(http, LoginView.class, LOGOUT_URL);
 
-        http.formLogin().defaultSuccessUrl("/home"); // TODO
+        http.formLogin().defaultSuccessUrl(SUCCESS_URL);
     }
 
     /**

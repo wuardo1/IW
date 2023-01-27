@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,23 @@ public class CreditCardView extends VerticalLayout {
         Span status = new Span(String.valueOf(creditCard.isActive()));
         statusLayout.add(statusLabel, status);
 
+        HorizontalLayout limitLayout = new HorizontalLayout();
+        Span limitLabel = new Span("Daily limit: ");
+        Span limit = new Span(String.valueOf(creditCard.getCardLimit()));
+        limitLayout.add(limitLabel, limit);
+
+        HorizontalLayout setLimitLayout = new HorizontalLayout();
+        NumberField setLimit = new NumberField("New Limit");
+        Button saveLimit = new Button("Save");
+        saveLimit.addClickListener(click -> {
+            if (!setLimit.isEmpty()) {
+                creditCardService.setLimit(creditCard, setLimit.getValue());
+                this.remove(editCreditCardLayout);
+                this.add(createEditCreditCardView(creditCard));
+            }
+        });
+        setLimitLayout.add(setLimit, saveLimit);
+
         Button deactivate = new Button("Deactivate");
         deactivate.addClickListener(click -> {
             creditCardService.setActive(creditCard, false);
@@ -104,7 +122,6 @@ public class CreditCardView extends VerticalLayout {
             this.add(createEditCreditCardView(creditCard));
         });
         HorizontalLayout button = new HorizontalLayout();
-
         if (creditCard.isActive()) {
             button.add(deactivate);
         } else {
@@ -112,7 +129,7 @@ public class CreditCardView extends VerticalLayout {
         }
 
         editCreditCardLayout.add(cardNumberLayout, issueDateLayout, validityDateLayout, debtLayout, statusLayout,
-                button);
+                limitLayout, setLimitLayout, button);
         return editCreditCardLayout;
     }
 

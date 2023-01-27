@@ -12,6 +12,8 @@ import java.util.Random;
 
 @Service
 public class CreditCardService {
+    public static final String CREDIT_CARD_DETAILS_WRONG_TEXT = "The credit card details are invalid.";
+    public static final String ILLEGAL_AMOUNT_TEXT = "The entered amount is not possible.";
 
     private Random random = new Random();
 
@@ -23,11 +25,14 @@ public class CreditCardService {
     private static final int DEFAULT_LIMIT = 500;
     private static final int DEFAULT_DEBT = 0;
     private static final boolean DEFAULT_ACTIVE = true;
+    private final BankAccountService bankAccountService;
 
     public CreditCardService (@Autowired CreditCardRepository creditCardRepository,
-                              @Autowired UserService userService) {
+                              @Autowired UserService userService,
+                              BankAccountService bankAccountService) {
         this.creditCardRepository = creditCardRepository;
         this.userService = userService;
+        this.bankAccountService = bankAccountService;
     }
 
     public CreditCardEntity createCreditCard(BankAccountEntity bankAccount) {
@@ -71,5 +76,30 @@ public class CreditCardService {
     public void setActive(CreditCardEntity creditCard, boolean active) {
         creditCard.setActive(active);
         creditCardRepository.save(creditCard);
+    }
+
+    public void setLimit(CreditCardEntity creditCard, double limit) {
+        creditCard.setCardLimit(limit);
+        creditCardRepository.save(creditCard);
+    }
+
+    public void makePayment(String cardNumber, int month, int year, String ccv, double amount, String type,
+                            int token) {
+        CreditCardEntity creditCard = creditCardRepository.findByCardNumber(cardNumber);
+        Calendar validity = Calendar.getInstance();
+        validity.setTime(creditCard.getValidityDate());
+
+        if (validity.get(Calendar.YEAR) != year
+        || validity.get(Calendar.MONTH) != month
+        || !creditCard.getCcv().equals(ccv)) {
+            throw new IllegalAccessError(CREDIT_CARD_DETAILS_WRONG_TEXT);
+        }
+
+        if (amount <= 0 || 50 < amount)
+            throw new IllegalArgumentException(ILLEGAL_AMOUNT_TEXT);
+
+        if (amount <= 10) {
+            bankAccountService.makeCreditCardPayment(creditCard, amount);
+        }
     }
 }
