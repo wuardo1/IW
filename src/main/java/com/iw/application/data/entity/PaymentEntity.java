@@ -15,9 +15,15 @@ public class PaymentEntity {
 
     private int token;
 
-    private UUID creditCardId;
+    private String operationId;
+
+    private String cardNumber;
 
     private double amount;
+
+    public PaymentEntity() {
+
+    }
 
     public int getToken() {
         return token;
@@ -27,5 +33,42 @@ public class PaymentEntity {
         this.token = token;
     }
 
+    public PaymentEntity(int token, String operationId, String cardNumber, double amount) {
+        this.token = token;
+        this.operationId = operationId;
+        this.cardNumber = cardNumber;
+        this.amount = amount;
+    }
 
+    public UUID getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(UUID paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 }

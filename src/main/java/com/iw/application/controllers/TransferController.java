@@ -1,6 +1,6 @@
 package com.iw.application.controllers;
 
-import com.iw.application.data.service.BankAccountService;
+import com.iw.application.service.BankAccountService;
 import org.iban4j.Iban;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

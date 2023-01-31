@@ -1,7 +1,7 @@
 package com.iw.application.views.banking;
 
-import com.iw.application.data.service.BankAccountService;
-import com.iw.application.data.service.UserService;
+import com.iw.application.service.BankAccountService;
+import com.iw.application.service.UserService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

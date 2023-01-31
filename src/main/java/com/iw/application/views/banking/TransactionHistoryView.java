@@ -2,9 +2,9 @@ package com.iw.application.views.banking;
 
 import com.iw.application.data.entity.BankAccountEntity;
 import com.iw.application.data.entity.TransactionEntity;
-import com.iw.application.data.service.BankAccountService;
-import com.iw.application.data.service.TransactionService;
-import com.iw.application.data.service.UserService;
+import com.iw.application.service.BankAccountService;
+import com.iw.application.service.TransactionService;
+import com.iw.application.service.UserService;
 import com.iw.application.views.InternalLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;

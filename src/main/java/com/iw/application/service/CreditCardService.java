@@ -1,4 +1,4 @@
-package com.iw.application.data.service;
+package com.iw.application.service;
 
 import com.iw.application.data.entity.BankAccountEntity;
 import com.iw.application.data.entity.CreditCardEntity;
@@ -83,23 +83,22 @@ public class CreditCardService {
         creditCardRepository.save(creditCard);
     }
 
-    public void makePayment(String cardNumber, int month, int year, String ccv, double amount, String type,
-                            int token) {
+    public void makePayment(String cardNumber, double amount) {
         CreditCardEntity creditCard = creditCardRepository.findByCardNumber(cardNumber);
-        Calendar validity = Calendar.getInstance();
-        validity.setTime(creditCard.getValidityDate());
-
-        if (validity.get(Calendar.YEAR) != year
-        || validity.get(Calendar.MONTH) != month
-        || !creditCard.getCcv().equals(ccv)) {
-            throw new IllegalAccessError(CREDIT_CARD_DETAILS_WRONG_TEXT);
-        }
 
         if (amount <= 0 || 50 < amount)
             throw new IllegalArgumentException(ILLEGAL_AMOUNT_TEXT);
 
-        if (amount <= 10) {
-            bankAccountService.makeCreditCardPayment(creditCard, amount);
-        }
+
+    }
+
+    public boolean checkData(String cardNumber, int month, int year, String ccv) {
+        CreditCardEntity creditCard = creditCardRepository.findByCardNumber(cardNumber);
+        Calendar validity = Calendar.getInstance();
+        validity.setTime(creditCard.getValidityDate());
+
+        return validity.get(Calendar.YEAR) == year
+                && validity.get(Calendar.MONTH) == month
+                && creditCard.getCcv().equals(ccv);
     }
 }

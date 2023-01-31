@@ -3,6 +3,7 @@ package com.iw.application.data.service;
 import com.iw.application.data.entity.BankAccountEntity;
 import com.iw.application.data.entity.CreditCardEntity;
 import com.iw.application.data.repositories.CreditCardRepository;
+import com.iw.application.service.CreditCardService;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.AfterEach;

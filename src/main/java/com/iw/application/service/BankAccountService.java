@@ -1,4 +1,4 @@
-package com.iw.application.data.service;
+package com.iw.application.service;
 
 import com.iw.application.data.entity.BankAccountEntity;
 import com.iw.application.data.entity.CreditCardEntity;
