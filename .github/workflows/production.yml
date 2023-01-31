@@ -23,10 +23,10 @@ jobs:
       
     steps:   
     - name: Setup Maven Action
-      uses: s4u/setup-maven-action@v1.5.1
+      uses: s4u/setup-maven-action@v1.6.0
       with:
         java-distribution: 'temurin' # See 'Supported distributions' for available options
-        java-version: '17'
+        java-version: '16'
      
     - name: Build with Maven and Publish to GitHub Packages Apache Maven
       run: mvn clean deploy -U -B -Pproduction --file pom.xml
