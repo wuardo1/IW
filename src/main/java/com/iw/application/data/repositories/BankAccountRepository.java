@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface BankAccountRepository extends JpaRepository<BankAccountEntity, UUID> {
     Optional<BankAccountEntity> findByIban(String iban);
 
+    Optional<BankAccountEntity> findByCreditCard_CreditCardId(UUID creditCardId);
+
 }

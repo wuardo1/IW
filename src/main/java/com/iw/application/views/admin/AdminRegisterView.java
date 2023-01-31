@@ -1,18 +1,14 @@
-package com.iw.application.views.register;
+package com.iw.application.views.admin;
 
 import com.iw.application.service.UserService;
-import com.iw.application.views.PublicLayout;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -20,16 +16,15 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.regex.Pattern;
 
-@PageTitle("Register | ucaBank")
-@Route(value = "register", layout = PublicLayout.class)
-@Uses(Icon.class)
-@AnonymousAllowed
-public class RegisterView extends VerticalLayout {
+@PageTitle("Admin Dashboard")
+@Route(value = "register-admin")
+@RolesAllowed("ROLE_ADMIN")
+public class AdminRegisterView extends VerticalLayout {
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8}.*$";
     private static final String EMAIL_PATTERN = "^(.+)@(.+)$";
 
@@ -40,29 +35,18 @@ public class RegisterView extends VerticalLayout {
     private final PasswordField passwordRepeated = new PasswordField("Repeat password");
     private final Button register = new Button("Register");
 
-
     Binder<PasswordField> passwordBinder = new Binder<>();
 
-    public RegisterView(@Autowired UserService userService) {
+    public AdminRegisterView(@Autowired UserService userService) {
         this.userService = userService;
 
         setSizeFull();
 
-        setAlignItems(Alignment.CENTER);
-        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(FlexComponent.Alignment.CENTER);
+        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
-        addClassName("register-view");
-
-        add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
-
-        //binder.bindInstanceFields(this);
-
-        register.addClickListener(event -> {
-            register(mail.getValue(), password.getValue());
-        });
-
     }
 
     private void register(String mail, String password) {
@@ -70,17 +54,11 @@ public class RegisterView extends VerticalLayout {
                 && Pattern.compile(PASSWORD_PATTERN).matcher(password).matches()
                 && Pattern.compile(EMAIL_PATTERN).matcher(mail).matches()) {
 
-            userService.addUser(mail, password);
-
+            userService.addAdmin(mail, password);
             Notification.show("User registered");
-            UI.getCurrent().navigate("login"); // TODO logged in after register
         } else {
             Notification.show("Check inputs");
         }
-    }
-
-    private Component createTitle() {
-        return new H3("Register");
     }
 
     private Component createFormLayout() {
@@ -95,9 +73,9 @@ public class RegisterView extends VerticalLayout {
         password.setPattern(PASSWORD_PATTERN);
         password.setErrorMessage("Not a valid password");
         passwordBinder.forField(passwordRepeated)
-                        .withValidator(passw -> passw.equals(password.getValue()),
-                                "The passwords do not match")
-                                .bind(PasswordField::getValue, PasswordField::setValue);
+                .withValidator(passw -> passw.equals(password.getValue()),
+                        "The passwords do not match")
+                .bind(PasswordField::getValue, PasswordField::setValue);
         formLayout.add(mail, password, passwordRepeated);
 
 //        mail.addKeyPressListener(event -> {
@@ -118,9 +96,12 @@ public class RegisterView extends VerticalLayout {
 
     private Component createButtonLayout() {
         HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.addClassName("button-layout");
+
         register.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        //register.setEnabled(false);
+        register.addClickListener(event -> {
+            register(mail.getValue(), password.getValue());
+        });
+
         buttonLayout.add(register);
         return buttonLayout;
     }
@@ -134,5 +115,4 @@ public class RegisterView extends VerticalLayout {
             register.setEnabled(false);
         }
     }
-
 }

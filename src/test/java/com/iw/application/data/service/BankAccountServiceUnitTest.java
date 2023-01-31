@@ -1,10 +1,10 @@
-package com.iw.application.data.service.account;
+package com.iw.application.data.service;
 
 import com.iw.application.data.entity.BankAccountEntity;
 import com.iw.application.data.entity.UserEntity;
 import com.iw.application.data.repositories.BankAccountRepository;
-import com.iw.application.data.repositories.TransactionRepository;
-import com.iw.application.data.service.BankAccountService;
+import com.iw.application.service.BankAccountService;
+import com.iw.application.service.TransactionService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ class BankAccountServiceUnitTest {
     BankAccountRepository bankAccountRepository;
 
     @Mock
-    TransactionRepository transactionRepository;
+    TransactionService transactionService;
 
     @InjectMocks
     BankAccountService bankAccountService;
@@ -28,8 +28,8 @@ class BankAccountServiceUnitTest {
     @BeforeEach
     void setUp() {
         bankAccountRepository = Mockito.mock(BankAccountRepository.class);
-        transactionRepository = Mockito.mock(TransactionRepository.class);
-        bankAccountService = new BankAccountService(bankAccountRepository, transactionRepository);
+        transactionService = Mockito.mock(TransactionService.class);
+        bankAccountService = new BankAccountService(bankAccountRepository, transactionService);
     }
 
     @AfterEach
